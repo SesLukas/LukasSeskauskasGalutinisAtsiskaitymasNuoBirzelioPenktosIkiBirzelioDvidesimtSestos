@@ -1,10 +1,9 @@
 import { getDb } from "../config/db.js";
 
-const db = getDb();
-const questionsCollection = db.collection("questions");
-
 export const getAllQuestions = async (req, res) => {
   try {
+    const db = getDb();
+    const questionsCollection = db.collection("questions");
     const questions = await questionsCollection.find().toArray();
     res.status(200).json(questions);
   } catch (err) {
@@ -14,9 +13,14 @@ export const getAllQuestions = async (req, res) => {
 
 export const createQuestion = async (req, res) => {
   try {
+    const db = getDb();
+    const questionsCollection = db.collection("questions");
     const newQuestion = {
       ...req.body,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: null,
+      likes: [],
+      dislikes: [],
     };
     await questionsCollection.insertOne(newQuestion);
     res.status(201).json(newQuestion);
@@ -24,9 +28,10 @@ export const createQuestion = async (req, res) => {
     res.status(500).json({ message: "Nepavyko sukurti klausimo", error: err.message });
   }
 };
-
 export const updateQuestion = async (req, res) => {
   try {
+    const db = getDb();
+    const questionsCollection = db.collection("questions");
     const { id } = req.params;
     const updatedFields = req.body;
     const result = await questionsCollection.updateOne({ _id: id }, { $set: updatedFields });
@@ -38,9 +43,10 @@ export const updateQuestion = async (req, res) => {
     res.status(500).json({ message: "Klaida atnaujinant klausimą", error: err.message });
   }
 };
-
 export const deleteQuestion = async (req, res) => {
   try {
+    const db = getDb();
+    const questionsCollection = db.collection("questions");
     const { id } = req.params;
     const result = await questionsCollection.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
@@ -51,11 +57,16 @@ export const deleteQuestion = async (req, res) => {
     res.status(500).json({ message: "Klaida trinant klausimą", error: err.message });
   }
 };
+
 export const getSingleQuestion = async (req, res) => {
   try {
+    const db = getDb();
+    const questionsCollection = db.collection("questions");
     const { id } = req.params;
     const question = await questionsCollection.findOne({ _id: id });
-    if (!question) return res.status(404).json({ message: "Klausimas nerastas" });
+    if (!question) {
+      return res.status(404).json({ message: "Klausimas nerastas" });
+    }
     res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ message: "Klaida gaunant klausimą", error: err.message });

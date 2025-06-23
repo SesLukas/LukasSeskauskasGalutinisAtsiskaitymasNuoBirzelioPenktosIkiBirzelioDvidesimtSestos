@@ -1,10 +1,9 @@
 import { getDb } from "../config/db.js";
 
-const db = getDb();
-const answersCollection = db.collection("answers");
-
 export const getAnswersByQuestionId = async (req, res) => {
   try {
+    const db = getDb();
+    const answersCollection = db.collection("answers");
     const { id } = req.params;
     const answers = await answersCollection.find({ question_id: id }).toArray();
     res.status(200).json(answers);
@@ -15,9 +14,12 @@ export const getAnswersByQuestionId = async (req, res) => {
 
 export const createAnswer = async (req, res) => {
   try {
+    const db = getDb();
+    const answersCollection = db.collection("answers");
     const newAnswer = {
       ...req.body,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: null
     };
     await answersCollection.insertOne(newAnswer);
     res.status(201).json(newAnswer);
@@ -28,8 +30,13 @@ export const createAnswer = async (req, res) => {
 
 export const updateAnswer = async (req, res) => {
   try {
+    const db = getDb();
+    const answersCollection = db.collection("answers");
     const { id } = req.params;
-    const updatedFields = req.body;
+    const updatedFields = {
+      ...req.body,
+      updatedAt: new Date().toISOString()
+    };
     const result = await answersCollection.updateOne({ _id: id }, { $set: updatedFields });
     if (result.matchedCount === 0) {
       return res.status(404).json({ message: "Atsakymas nerastas" });
@@ -42,6 +49,8 @@ export const updateAnswer = async (req, res) => {
 
 export const deleteAnswer = async (req, res) => {
   try {
+    const db = getDb();
+    const answersCollection = db.collection("answers");
     const { id } = req.params;
     const result = await answersCollection.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
@@ -52,3 +61,4 @@ export const deleteAnswer = async (req, res) => {
     res.status(500).json({ message: "Klaida trinant atsakymą", error: err.message });
   }
 };
+
