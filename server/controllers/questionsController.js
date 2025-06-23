@@ -1,65 +1,53 @@
 import { getDb } from "../config/db.js";
-import { ObjectId } from "mongodb";
 
-export async function getAllQuestions(req, res) {
+const db = getDb();
+const questionsCollection = db.collection("questions");
+
+export const getAllQuestions = async (req, res) => {
   try {
-    const db = getDb();
-    const questions = await db.collection("questions").find().toArray();
-    res.json(questions);
+    const questions = await questionsCollection.find().toArray();
+    res.status(200).json(questions);
   } catch (err) {
-    res.status(500).json({ message: "Klaida gaunant klausimus" });
+    res.status(500).json({ message: "Klaida gaunant klausimus", error: err.message });
   }
-}
+};
 
-export async function getSingleQuestion(req, res) {
+export const createQuestion = async (req, res) => {
   try {
-    const db = getDb();
-    const question = await db
-      .collection("questions")
-      .findOne({ _id: new ObjectId(req.params.id) });
-    if (!question) return res.status(404).json({ message: "Nerasta" });
-    res.json(question);
-  } catch (err) {
-    res.status(500).json({ message: "Klaida gaunant klausimą" });
-  }
-}
-
-export async function createQuestion(req, res) {
-  try {
-    const db = getDb();
     const newQuestion = {
-      text: req.body.text,
-      authorId: req.body.authorId,
-      createdAt: new Date(),
+      ...req.body,
+      createdAt: new Date().toISOString()
     };
-    const result = await db.collection("questions").insertOne(newQuestion);
-    res.status(201).json(result);
+    await questionsCollection.insertOne(newQuestion);
+    res.status(201).json(newQuestion);
   } catch (err) {
-    res.status(500).json({ message: "Klaida kuriant klausimą" });
+    res.status(500).json({ message: "Nepavyko sukurti klausimo", error: err.message });
   }
-}
+};
 
-export async function updateQuestion(req, res) {
+export const updateQuestion = async (req, res) => {
   try {
-    const db = getDb();
-    const result = await db.collection("questions").updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $set: { text: req.body.text } }
-    );
-    res.json(result);
+    const { id } = req.params;
+    const updatedFields = req.body;
+    const result = await questionsCollection.updateOne({ _id: id }, { $set: updatedFields });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Klausimas nerastas" });
+    }
+    res.status(200).json({ message: "Klausimas atnaujintas" });
   } catch (err) {
-    res.status(500).json({ message: "Klaida atnaujinant klausimą" });
+    res.status(500).json({ message: "Klaida atnaujinant klausimą", error: err.message });
   }
-}
+};
 
-export async function deleteQuestion(req, res) {
+export const deleteQuestion = async (req, res) => {
   try {
-    const db = getDb();
-    const result = await db
-      .collection("questions")
-      .deleteOne({ _id: new ObjectId(req.params.id) });
-    res.json(result);
+    const { id } = req.params;
+    const result = await questionsCollection.deleteOne({ _id: id });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Klausimas nerastas" });
+    }
+    res.status(200).json({ message: "Klausimas ištrintas" });
   } catch (err) {
-    res.status(500).json({ message: "Klaida trinant klausimą" });
+    res.status(500).json({ message: "Klaida trinant klausimą", error: err.message });
   }
-}
+};
