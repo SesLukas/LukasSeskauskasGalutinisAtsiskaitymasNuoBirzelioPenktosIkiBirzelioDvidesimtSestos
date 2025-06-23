@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import questionRoutes from "./routes/questionsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import likesRoutes from "./routes/likesRoutes.js";
 dotenv.config();
 
 import { connectToDatabase } from "./config/db.js";
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(authRoutes);
 app.use(questionRoutes);
 app.use(userRoutes);
+app.use("/", likesRoutes);
 
 app.get("/", (req, res) => res.send("Sveiki atvykę!"));
 
