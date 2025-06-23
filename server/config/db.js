@@ -1,26 +1,19 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config();                                 
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
-
+const client = new MongoClient(process.env.MONGODB_URI);
 let db;
 
-async function connectToDatabase() {
-  try {
-    await client.connect();
-    db = client.db(process.env.DB_NAME);
-    console.log(" MongoDB prijungta");
-  } catch (err) {
-    console.error(" Nepavyko prisijungti prie DB:", err);
-    process.exit(1);
-  }
-}
-
-function getDb() {
-  if (!db) throw new Error(" DB dar neprijungta. Kviesk connectToDatabase() pirma.");
+export async function connectToDatabase() {
+  if (db) return db;                            
+  await client.connect();
+  db = client.db(process.env.DB_NAME);
+  console.log(" Prisijungta prie MongoDB");
   return db;
 }
 
-export { connectToDatabase, getDb };
+export function getDb() {
+  if (!db) throw new Error("DB neprijungta – kviesk connectToDatabase()");
+  return db;
+}

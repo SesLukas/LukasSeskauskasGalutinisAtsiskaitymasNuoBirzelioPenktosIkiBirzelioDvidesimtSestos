@@ -1,6 +1,9 @@
-import { getDb } from "../config/db.js";
+import { connectToDatabase } from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+const db = await connectToDatabase();
+const usersCollection = db.collection("users");
 
 
 export async function login(req, res) {
