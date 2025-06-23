@@ -1,11 +1,23 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { connectToDatabase } from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
 dotenv.config();
+await connectToDatabase();
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.use("/api", authRoutes);
 const PORT = process.env.PORT || 3000;
 const uri = process.env.MONGODB_URI;
+connectToDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Serveris veikia: http://localhost:${PORT}`);
+  });
+});
 
 const client = new MongoClient(uri);
 let db;
