@@ -51,3 +51,13 @@ export const deleteQuestion = async (req, res) => {
     res.status(500).json({ message: "Klaida trinant klausimą", error: err.message });
   }
 };
+export const getSingleQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const question = await questionsCollection.findOne({ _id: id });
+    if (!question) return res.status(404).json({ message: "Klausimas nerastas" });
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ message: "Klaida gaunant klausimą", error: err.message });
+  }
+};
