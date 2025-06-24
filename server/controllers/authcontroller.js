@@ -2,15 +2,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { getDb } from "../config/db.js";
+import { randomUUID } from "crypto";
 
 dotenv.config();
-
 export const registerUser = async (req, res) => {
   try {
     const db = getDb();
     const usersCollection = db.collection("users");
 
-    const { username, password } = req.body;
+    const { name, surname, email, username, password } = req.body;
 
     const existingUser = await usersCollection.findOne({ username });
     if (existingUser) {
@@ -19,17 +19,31 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
+      _id: randomUUID(),
+      name,
+      surname,
+      email,
       username,
       password: hashedPassword,
     };
 
     await usersCollection.insertOne(newUser);
-    res.status(201).json({ message: "Registracija sėkminga" });
+
+    const token = jwt.sign(
+      { id: newUser._id, username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({
+      message: "Registracija sėkminga",
+      token,
+      username
+    });
   } catch (err) {
     res.status(500).json({ message: "Registracijos klaida", error: err.message });
   }
 };
-
 export const loginUser = async (req, res) => {
   try {
     const db = getDb();

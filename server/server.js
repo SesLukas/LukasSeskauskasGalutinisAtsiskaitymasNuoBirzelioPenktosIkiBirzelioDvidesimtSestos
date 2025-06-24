@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import questionRoutes from "./routes/questionsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import likesRoutes from "./routes/likesRoutes.js";
-import answersByQuestionRoutes from "./routes/answersByQuestionRoutes.js";
+import answersroutes from "./routes/answersroutes.js";
 import questionsFilterRoutes from "./routes/questionsFilterRoutes.js";
 dotenv.config();
 
@@ -17,11 +17,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(authRoutes);
-app.use(questionRoutes);
+app.use("/questions", questionRoutes);
 app.use(userRoutes);
+app.use(answersroutes);
 app.use("/", likesRoutes);
-app.use(answersByQuestionRoutes);
-app.use(questionsFilterRoutes);
+app.use("/questions/filter", questionsFilterRoutes);
 
 app.get("/", (req, res) => res.send("Sveiki atvykę!"));
 
