@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const { dispatch } = useContext(AuthContext);
