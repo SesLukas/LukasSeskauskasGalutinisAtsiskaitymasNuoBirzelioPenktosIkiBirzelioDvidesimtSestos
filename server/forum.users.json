@@ -1,0 +1,152 @@
+[{
+  "_id": "9afb32b6-e3e3-4c2a-840e-e501c005ecf2",
+  "name": "Gabrielė",
+  "surname": "Stankevičiūtė",
+  "username": "virdulys34",
+  "email": "gabriele.stankeviciute@email.com",
+  "password": "$2b$10$ddO7rayglhaCBT08oTIRROLAeV/t.HEm3W52TO4yB6OgHmpykDrOm"
+},
+{
+  "_id": "583119a4-1335-414b-9266-c7f037c7f430",
+  "name": "Paulius",
+  "surname": "Matulevičius",
+  "username": "sviestas21",
+  "email": "paulius.matulevicius@email.com",
+  "password": "$2b$10$1o7PnlD6QE1BnT75PfA/4.VBXm6eM6T.xdv1lR65b5pWxXAVmSSCm"
+},
+{
+  "_id": "41e856a1-4ac2-4100-b927-ae1ff2470a0a",
+  "name": "Jurgita",
+  "surname": "Matulevičiūtė",
+  "username": "saukstelis4",
+  "email": "jurgita.matuleviciute@email.com",
+  "password": "$2b$10$qz1ypiVGthJJR8X/KAQ7EureWat524OMutKaCGsGlnxsVwO117BTm"
+},
+{
+  "_id": "7b3fa374-e9e3-4b16-9c3c-b26650ac2086",
+  "name": "Tomas",
+  "surname": "Petrauskas",
+  "username": "mikseris71",
+  "email": "tomas.petrauskas@email.com",
+  "password": "$2b$10$lJHi9m2QH7NqCPWMzrkcKuagQZoZpNz1an33FDvCEBNyfXeISxC22"
+},
+{
+  "_id": "7b6536c3-9cd4-4a14-baa6-f51274ed9b0c",
+  "name": "Lukas",
+  "surname": "Paulevičius",
+  "username": "puodas59",
+  "email": "lukas.paulevicius@email.com",
+  "password": "$2b$10$MsVXLGf2BWIdZMD9mttdWO.Esxc0oNRou1IXhESgM6QYTldHnsEjO"
+},
+{
+  "_id": "84b6ff4c-bd6f-4a43-8078-090f1b870e06",
+  "name": "Monika",
+  "surname": "Zabielaitė",
+  "username": "siurblys93",
+  "email": "monika.zabielaite@email.com",
+  "password": "$2b$10$ByyLGaeSw8nRPl.Flof2muOtacq1z4yVYn6uhqACG87QvJMiMUxOW"
+},
+{
+  "_id": "134f8a24-1c64-4701-b772-361a7cc68554",
+  "name": "Karolis",
+  "surname": "Zabiela",
+  "username": "plyteles54",
+  "email": "karolis.zabiela@email.com",
+  "password": "$2b$10$33oBbaPU6OWkuvyAEXA8wusFwL8.9FA253Or15y8WgVeuZIcTitNK"
+},
+{
+  "_id": "47a7bbfe-c4e9-4018-8e5d-316269b7d9a1",
+  "name": "Eglė",
+  "surname": "Kazlauskienė",
+  "username": "druska50",
+  "email": "eglė.kazlauskiene@email.com",
+  "password": "$2b$10$Nx.KRkr.7aQfqxZUvRxS3u1N332Wmep21/iCjSc5hpqxu7WXfUokm"
+},
+{
+  "_id": "930b0cbf-bcf7-4c4b-ba12-15cbbf7df90e",
+  "name": "Edgaras",
+  "surname": "Germanavičius",
+  "username": "obuolys71",
+  "email": "edgaras.germanavicius@email.com",
+  "password": "$2b$10$wniUOy8gKUPBdtiQ5CciW.Dr3e7KTp.86tN.Z.o.RYotWyFGnLtOK"
+},
+{
+  "_id": "b9131387-91ef-4cb6-8603-646d2bb4c2dd",
+  "name": "Justė",
+  "surname": "Ardevičiūtė",
+  "username": "apkepas34",
+  "email": "justė.ardeviciute@email.com",
+  "password": "$2b$10$NhOakcukw3o40bWheowjKeYsWbtE/Ug0/7Tu/tg9cd7wc.kBKHFcS"
+},
+{
+  "_id": "3ae7f88c-969e-4f61-8bcd-fd77b406b24c",
+  "name": "Arnas",
+  "surname": "Maliauskas",
+  "username": "grindys69",
+  "email": "arnas.malinauskas@email.com",
+  "password": "$2b$10$wtgcCueVNpuTTp/qwFXL7ea2wpJ/lwGFGunUDxhMoXxjJtRIH8IQG"
+},
+{
+  "_id": "da09a692-2870-4039-825b-96bea03c0808",
+  "name": "Lina",
+  "surname": "Jankauskytė",
+  "username": "saldiklis73",
+  "email": "lina.jankauskyte@email.com",
+  "password": "$2b$10$.gh6O46u2TItGfVuYej3oOIEm6k5ko9ZFv8C95ctCsFU0xTLsLvIS"
+},
+{
+  "_id": "07a9b3c3-3a3c-4e13-a273-16a0b896549c",
+  "name": "Edgaras",
+  "surname": "Brazaitis",
+  "username": "samtis12",
+  "email": "edgaras.brazaitis@email.com",
+  "password": "$2b$10$7le1Fc6ccoKGaZ/cC8W2KeuZ6p8bnMhhRJJub4.tOMcMcklns1/3G"
+},
+{
+  "_id": "59808eab-2894-40a9-80ff-151c1d09e2d8",
+  "name": "Julė",
+  "surname": "Stankėnė",
+  "username": "tvarka76",
+  "email": "justė.stankene@email.com",
+  "password": "$2b$10$YhXh56VC.F5HO/geeC03O.LmbE5pfphBG3B8M0F98FyD9XV8FckJa"
+},
+{
+  "_id": "15ab5fd3-cb7a-4f24-b6cd-70779f0ee997",
+  "name": "Arnas",
+  "surname": "Jankauskas",
+  "username": "lentyna10",
+  "email": "arnas.jankauskas@email.com",
+  "password": "$2b$10$lWNKhI1.niP6imQP5M2an.nxp2EUK0eYJMZTJooXVYRyjWljjB/AS"
+},
+{
+  "_id": "337f613e-2214-4bb1-a93e-9fed1915dd10",
+  "name": "Gabrielė",
+  "surname": "Petrauskė",
+  "username": "lubos23",
+  "email": "gabriele.petrauske@email.com",
+  "password": "$2b$10$QUgkjVJUAGd.zLsw8wNaO.aoRqLrsF4zIhAvLFK1grnrT9WHgS59W"
+},
+{
+  "_id": "41a95bf0-faf9-4b71-bbf6-70b1b7aa5b86",
+  "name": "Marius",
+  "surname": "Antanaitis",
+  "username": "kambarinis56",
+  "email": "marius.antanaitis@email.com",
+  "password": "$2b$10$opuMqWLKz4TX2CxCI2rGM.ohiMcrpFrgbsqFg8tQV26EwajXygIrq"
+},
+{
+  "_id": "e10ff72b-82c3-4766-9725-2ec91d2e3112",
+  "name": "Rūta",
+  "surname": "Audraitenė",
+  "username": "sveikiuzkandziai98",
+  "email": "rūta.audraitene@email.com",
+  "password": "$2b$10$CVyPYqmGIo9cVAulwUwJduTJXr4EAISLtWA7UzSm/CuVC8w24OIqq"
+},
+{
+  "_id": "e2874983-e668-4661-9e49-6da4b0a67c2b",
+  "name": "Mantas",
+  "surname": "Morkėnas",
+  "username": "isplautiindai92",
+  "email": "mantas.morkenas@email.com",
+  "password": "$2b$10$fNgEEOqar/4.HiXokchi1uNXJU0MfTh.wmLo/ddtl31SqPWUEApem"
+}]
