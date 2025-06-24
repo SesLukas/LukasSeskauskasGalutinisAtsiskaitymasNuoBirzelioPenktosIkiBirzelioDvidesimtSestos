@@ -1,11 +1,12 @@
 import { createContext, useReducer, useEffect } from "react";
-import { fetchWithToken } from "../utils/fetchWithToken";
+import { fetchWithToken } from "../utils/fetchtwithoken.js";
 
 export const AuthContext = createContext();
 
 const initialState = {
   user: null,
   token: localStorage.getItem("token") || null,
+  isAuthenticated: false,
 };
 
 const authReducer = (state, action) => {
@@ -15,12 +16,14 @@ const authReducer = (state, action) => {
       return {
         user: action.payload.user,
         token: action.payload.token,
+        isAuthenticated: true,
       };
     case "LOGOUT":
       localStorage.removeItem("token");
       return {
         user: null,
         token: null,
+        isAuthenticated: false,
       };
     default:
       return state;

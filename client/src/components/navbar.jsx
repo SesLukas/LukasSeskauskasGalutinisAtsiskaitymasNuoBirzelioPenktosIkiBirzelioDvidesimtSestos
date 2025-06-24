@@ -1,10 +1,12 @@
 import { useContext } from "react";
-import { Link, useNavigate } from "react-router";
-import { AuthContext } from "../context/AuthContext";
+import { NavLink, useNavigate } from "react-router"; // tik iš react-router!
+import { AuthContext } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
-  const { state, dispatch } = useContext(AuthContext);
+  const { user, token, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const isAuthenticated = !!token;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -14,17 +16,17 @@ const Navbar = () => {
 
   return (
     <nav style={{ display: "flex", gap: "10px", padding: "10px", borderBottom: "1px solid #ccc" }}>
-      <Link to="/">Home</Link>
+      <NavLink to="/">Home</NavLink>
 
-      {state.isAuthenticated ? (
+      {isAuthenticated ? (
         <>
-          <span>Welcome, {state.user}</span>
+          <span>Welcome, {user}</span>
           <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
+          <NavLink to="/login">Login</NavLink>
+          <NavLink to="/register">Register</NavLink>
         </>
       )}
     </nav>
