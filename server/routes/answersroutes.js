@@ -4,7 +4,7 @@ import {
   createAnswer,
   updateAnswer,
   deleteAnswer
-} from "../controllers/answerController.js";
+} from "../controllers/answersController.js";
 
 const router = express.Router();
 

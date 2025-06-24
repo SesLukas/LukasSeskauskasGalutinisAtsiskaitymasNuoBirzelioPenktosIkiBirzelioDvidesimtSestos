@@ -5,24 +5,36 @@ export const getAllQuestions = async (req, res) => {
     const db = getDb();
     const questionsCollection = db.collection("questions");
 
-    const { sort, filter, tag, search, page = 1, limit = 10 } = req.query;
+    const {
+      sort,
+      filter,
+      tag,
+      topic,
+      search,
+      page = 1,
+      limit = 10
+    } = req.query;
 
     const query = {};
 
-    // 🔍 Filtravimas
+    // 🔍 Filtravimas pagal atsakymus
     if (filter === "answered") {
-      query.answers = { $exists: true, $not: { $size: 0 } };
+      query.answerCount = { $gt: 0 };
     } else if (filter === "unanswered") {
-      query.answers = { $exists: true, $size: 0 };
+      query.answerCount = { $eq: 0 };
     }
 
+    // 🔍 Filtravimas pagal tag'ą
     if (tag) {
-      query.tags = tag;
+      query.tags = { $in: [tag] };
     }
-    if (req.query.topic) {
-  filter.topic = req.query.topic;
-}
 
+    // 🔍 Filtravimas pagal temą (topic)
+    if (topic) {
+      query.topic = topic;
+    }
+
+    // 🔍 Paieška pagal pavadinimą
     if (search) {
       query.title = { $regex: search, $options: "i" };
     }
@@ -38,6 +50,7 @@ export const getAllQuestions = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const lim = parseInt(limit);
 
+    // 🔎 Užklausa
     const questions = await questionsCollection
       .find(query)
       .sort(sortOptions)
@@ -47,6 +60,9 @@ export const getAllQuestions = async (req, res) => {
 
     res.status(200).json(questions);
   } catch (err) {
-    res.status(500).json({ message: "Klaida gaunant klausimus", error: err.message });
+    res.status(500).json({
+      message: "Klaida gaunant klausimus",
+      error: err.message
+    });
   }
 };
