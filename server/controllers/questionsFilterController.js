@@ -19,6 +19,9 @@ export const getAllQuestions = async (req, res) => {
     if (tag) {
       query.tags = tag;
     }
+    if (req.query.topic) {
+  filter.topic = req.query.topic;
+}
 
     if (search) {
       query.title = { $regex: search, $options: "i" };
