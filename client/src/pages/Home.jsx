@@ -1,10 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { fetchWithToken } from "../utils/fetchtwithoken.js";
 
 const Home = () => {
   const { user, isAuthenticated, dispatch } = useContext(AuthContext);
+  const [questions, setQuestions] = useState([]);
 
+  
   useEffect(() => {
     const checkUser = async () => {
       if (!user && localStorage.getItem("token")) {
@@ -22,9 +24,22 @@ const Home = () => {
         }
       }
     };
-
     checkUser();
   }, [user, dispatch]);
+
+  // Gauna klausimus
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch("http://localhost:5500/questions");
+        const data = await res.json();
+        setQuestions(data);
+      } catch (err) {
+        console.error("Nepavyko gauti klausimų:", err.message);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
   return (
     <div>
@@ -34,6 +49,13 @@ const Home = () => {
       ) : (
         <p>Prašome prisijungti, kad galėtumėte naudotis visomis funkcijomis.</p>
       )}
+
+      <h2>Klausimai:</h2>
+      <ul>
+        {questions.map(q => (
+          <li key={q._id}>{q.title}</li>
+        ))}
+      </ul>
     </div>
   );
 };
