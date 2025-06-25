@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 const initialState = {
   user: null,
+  id: null,
   token: localStorage.getItem("token") || null,
   isAuthenticated: false,
 };
@@ -15,6 +16,7 @@ const authReducer = (state, action) => {
       localStorage.setItem("token", action.payload.token);
       return {
         user: action.payload.user,
+        id: action.payload.id, 
         token: action.payload.token,
         isAuthenticated: true,
       };
@@ -22,6 +24,7 @@ const authReducer = (state, action) => {
       localStorage.removeItem("token");
       return {
         user: null,
+        id: null,
         token: null,
         isAuthenticated: false,
       };
@@ -40,7 +43,14 @@ export const AuthProvider = ({ children }) => {
         const res = await fetchWithToken("http://localhost:5500/me");
         if (res.ok) {
           const data = await res.json();
-          dispatch({ type: "LOGIN", payload: { user: data.username, token: state.token } });
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              user: data.username,
+              id: data.id, 
+              token: state.token,
+            },
+          });
         } else {
           dispatch({ type: "LOGOUT" });
         }
