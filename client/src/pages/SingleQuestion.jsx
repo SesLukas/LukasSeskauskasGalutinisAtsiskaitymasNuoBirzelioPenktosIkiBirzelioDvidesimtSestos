@@ -1,9 +1,14 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { fetchWithToken } from "../utils/fetchtwithoken.js";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext.jsx";
+
+
 
 const SingleQuestion = () => {
   const { id } = useParams();
+  const { isAuthenticated } = useContext(AuthContext);
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
@@ -24,7 +29,7 @@ const SingleQuestion = () => {
     e.preventDefault();
     const res = await fetchWithToken(`http://localhost:5500/questions/${id}/answers`, {
       method: "POST",
-      body: JSON.stringify({ content: newAnswer }),
+      body: JSON.stringify({ text: newAnswer }),
     });
     if (res.ok) {
       const answer = await res.json();
@@ -48,21 +53,32 @@ const SingleQuestion = () => {
       <hr />
       <h3>Atsakymai:</h3>
       <ul>
-  {answers.map((a) => (
+  {answers.map((a) => {
+  return (
     <li key={a._id}>
       <p>{a.text}</p>
-      <small>Autorius: {a.author?.username || "Nežinomas"}</small>
+      <small>
+  Autorius: {a.author && a.author.username ? a.author.username : "Nežinomas"}
+</small>
     </li>
-  ))}
+  );
+})}
 </ul>
-      <form onSubmit={handleAnswerSubmit}>
-        <textarea
-          value={newAnswer}
-          onChange={(e) => setNewAnswer(e.target.value)}
-          placeholder="Tavo atsakymas"
-        />
-        <button type="submit">Pateikti atsakymą</button>
-      </form>
+      {isAuthenticated ? (
+  <form onSubmit={handleAnswerSubmit}>
+    <textarea
+      value={newAnswer}
+      onChange={(e) => setNewAnswer(e.target.value)}
+      placeholder="Tavo atsakymas"
+      required
+    />
+    <button type="submit">Pateikti atsakymą</button>
+  </form>
+) : (
+  <p style={{ marginTop: "1rem", fontStyle: "italic" }}>
+    Prisijunkite, jei norite pateikti atsakymą.
+  </p>
+)}
     </div>
   );
 };

@@ -1,5 +1,5 @@
-
 import express from "express";
+import { authenticate } from "../middleware/authMiddleware.js";
 import {
   getAllQuestions,
   getSingleQuestion,
@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/", getAllQuestions);
 router.get("/:id", getSingleQuestion);
-router.post("/", createQuestion);
+router.post("/", authenticate, createQuestion);
 router.patch("/:id", updateQuestion);
 router.delete("/:id", deleteQuestion);
 
