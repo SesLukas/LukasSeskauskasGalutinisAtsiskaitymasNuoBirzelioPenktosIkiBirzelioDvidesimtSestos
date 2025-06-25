@@ -19,7 +19,14 @@ const Login = () => {
 
     if (res.ok) {
       localStorage.setItem("token", data.token);
-      dispatch({ type: "LOGIN", payload: { user: data.username, token: data.token } });
+      dispatch({
+  type: "LOGIN",
+  payload: {
+    user: data.username,
+    token: data.token,
+    id: data.id 
+  }
+});;
       navigate("/"); 
     } else {
       alert(data.message);
@@ -35,9 +42,10 @@ const Login = () => {
         placeholder="Username"
       />
       <input
-        type="password"
-        value={form.password}
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
+  type="password"
+  value={form.password}
+  onChange={(e) => setForm({ ...form, password: e.target.value })}
+
         placeholder="Password"
       />
       <button type="submit">Login</button>

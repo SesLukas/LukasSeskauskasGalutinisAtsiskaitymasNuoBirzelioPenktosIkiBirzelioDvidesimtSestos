@@ -3,7 +3,7 @@ import { getDb } from "../config/db.js";
 
 export const getAllQuestions = async (req, res) => {
   try {
-    const db = getDb();
+    const db = getDb(); 
     const questions = await db.collection("questions").aggregate([
       {
         $lookup: {
@@ -29,10 +29,12 @@ export const getAllQuestions = async (req, res) => {
 };
 
 
+
 export const createQuestion = async (req, res) => {
   try {
     const db = getDb();
     const questionsCollection = db.collection("questions");
+
     const newQuestion = {
       ...req.body,
       createdAt: new Date().toISOString(),
@@ -40,12 +42,14 @@ export const createQuestion = async (req, res) => {
       likes: [],
       dislikes: [],
     };
+
     await questionsCollection.insertOne(newQuestion);
     res.status(201).json(newQuestion);
   } catch (err) {
     res.status(500).json({ message: "Nepavyko sukurti klausimo", error: err.message });
   }
 };
+
 export const updateQuestion = async (req, res) => {
   try {
     const db = getDb();
@@ -85,7 +89,7 @@ export const getSingleQuestion = async (req, res) => {
 
     const { id } = req.params;
 
-    
+    // Klausimas su autoriumi
     const question = await questionsCollection.aggregate([
       {
         $match: { _id: id }
@@ -110,7 +114,7 @@ export const getSingleQuestion = async (req, res) => {
       return res.status(404).json({ message: "Klausimas nerastas" });
     }
 
-    
+    // Atsakymai su jų autoriais
     const answers = await answersCollection.aggregate([
       {
         $match: { question_id: id }
