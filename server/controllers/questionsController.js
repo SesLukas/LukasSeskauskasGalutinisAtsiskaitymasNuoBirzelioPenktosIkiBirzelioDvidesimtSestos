@@ -54,13 +54,19 @@ export const createQuestion = async (req, res) => {
     const { title, description, topics = [], tags = [] } = req.body;
 
     const newQuestion = {
-  id: uuidv4(),
+  _id: uuidv4(),               
+  id: uuidv4(),                
   title,
   description,
   topics,
   tags,
-  user_id: req.user.id,  
+  user_id: req.user.id,
   createdAt: new Date(),
+  updatedAt: null,
+  edited: false,
+  likes: [],
+  dislikes: [],
+  answerCount: 0
 };
 
     await db.collection("questions").insertOne(newQuestion);
@@ -77,25 +83,49 @@ export const updateQuestion = async (req, res) => {
     const db = getDb();
     const questionsCollection = db.collection("questions");
     const { id } = req.params;
-    const updatedFields = req.body;
-    const result = await questionsCollection.updateOne({ _id: id }, { $set: updatedFields });
-    if (result.matchedCount === 0) {
+
+    const existing = await questionsCollection.findOne({ id }); 
+
+    if (!existing) {
       return res.status(404).json({ message: "Klausimas nerastas" });
     }
+
+    
+    if (existing.user_id !== req.user.id) {
+      return res.status(403).json({ message: "Neturite teisės redaguoti šio klausimo" });
+    }
+
+    const updatedFields = {
+      ...req.body,
+      edited: true,
+      updatedAt: new Date()
+    };
+
+    await questionsCollection.updateOne({ id }, { $set: updatedFields });
+
     res.status(200).json({ message: "Klausimas atnaujintas" });
   } catch (err) {
     res.status(500).json({ message: "Klaida atnaujinant klausimą", error: err.message });
   }
 };
+
 export const deleteQuestion = async (req, res) => {
   try {
     const db = getDb();
     const questionsCollection = db.collection("questions");
     const { id } = req.params;
-    const result = await questionsCollection.deleteOne({ _id: id });
-    if (result.deletedCount === 0) {
+
+    const question = await questionsCollection.findOne({ id });
+    if (!question) {
       return res.status(404).json({ message: "Klausimas nerastas" });
     }
+
+    if (question.user_id !== req.user.id) {
+      return res.status(403).json({ message: "Negalite ištrinti šio klausimo" });
+    }
+
+    await questionsCollection.deleteOne({ id });
+
     res.status(200).json({ message: "Klausimas ištrintas" });
   } catch (err) {
     res.status(500).json({ message: "Klaida trinant klausimą", error: err.message });
@@ -114,7 +144,7 @@ export const getSingleQuestion = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "user",
+          localField: "user_id",
           foreignField: "_id",
           as: "author"
         }
@@ -154,6 +184,26 @@ export const getSingleQuestion = async (req, res) => {
         }
       },
       {
+  $project: {
+    id: 1,
+    title: 1,
+    description: 1,
+    createdAt: 1,
+    topics: 1,
+    tags: 1,
+    user_id: 1,
+    author: 1,
+    answers: 1,
+    "answers._id": 1,
+    "answers.text": 1,
+    "answers.createdAt": 1,
+    "answers.edited": 1,
+    "answers.author": 1,
+    "answers.author._id": 1,
+    "answers.author.username": 1
+  }
+},
+      {
         $group: {
           _id: "$id",
           title: { $first: "$title" },
@@ -161,6 +211,7 @@ export const getSingleQuestion = async (req, res) => {
           createdAt: { $first: "$createdAt" },
           topics: { $first: "$topics" },
           tags: { $first: "$tags" },
+          user_id: { $first: "$user_id" },
           author: { $first: "$author" },
           answers: {
             $push: {
@@ -177,7 +228,7 @@ export const getSingleQuestion = async (req, res) => {
         }
       }
     ]).toArray();
-    console.log("Questions su autoriumi:", JSON.stringify(questions, null, 2));
+    
 
     if (!questions[0]) {
       return res.status(404).json({ message: "Klausimas nerastas" });

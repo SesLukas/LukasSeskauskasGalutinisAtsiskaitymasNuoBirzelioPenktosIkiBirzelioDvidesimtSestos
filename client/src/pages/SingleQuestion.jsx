@@ -1,17 +1,42 @@
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import { useEffect, useState, useContext } from "react";
 import { fetchWithToken } from "../utils/fetchtwithoken.js";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
-
-
 
 const SingleQuestion = () => {
   const { id } = useParams();
-  const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { isAuthenticated, id: loggedInUserId } = useContext(AuthContext);
+
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
+  const [editingAnswerId, setEditingAnswerId] = useState(null);
+  const [editedText, setEditedText] = useState("");
+
+  const startEditingAnswer = (id, text) => {
+    setEditingAnswerId(id);
+    setEditedText(text);
+  };
+
+  const handleUpdateAnswer = async (e) => {
+    e.preventDefault();
+    const res = await fetchWithToken(`http://localhost:5500/answers/${editingAnswerId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ text: editedText })
+    });
+
+    if (res.ok) {
+      setAnswers(answers.map((a) =>
+        a.id === editingAnswerId ? { ...a, text: editedText, edited: true } : a
+      ));
+      setEditingAnswerId(null);
+      setEditedText("");
+    } else {
+      alert("Nepavyko atnaujinti atsakymo");
+    }
+  };
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -38,47 +63,126 @@ const SingleQuestion = () => {
     }
   };
 
+  const handleDeleteQuestion = async () => {
+    const confirmDelete = window.confirm("Ar tikrai ištrinti šį klausimą?");
+    if (!confirmDelete) return;
+
+    const res = await fetchWithToken(`http://localhost:5500/questions/${question.id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      navigate("/questions");
+    } else {
+      alert("Nepavyko ištrinti klausimo.");
+    }
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    const confirmDelete = window.confirm("Ar tikrai ištrinti atsakymą?");
+    if (!confirmDelete) return;
+
+    const res = await fetchWithToken(`http://localhost:5500/answers/${answerId}`, {
+      method: "DELETE",
+    });
+    
+
+    if (res.ok) {
+      setAnswers(answers.filter(a => a.id !== answerId));
+    } else {
+      alert("Nepavyko ištrinti atsakymo.");
+    }
+  };
+console.log("question:", question);
   if (!question) return <p>Kraunama...</p>;
 
   return (
     <div>
       <h2>{question.title}</h2>
-      <p>{question.description}</p>
+      <p>
+        {question.description}
+        {question.edited && (
+          <span style={{ fontStyle: "italic", color: "#777" }}> (redaguota)</span>
+        )}
+      </p>
+
+      {String(loggedInUserId) === String(question.user_id) && (
+        <>
+          <button onClick={() => navigate(`/questions/${question.id}/edit`)}>
+             Redaguoti klausimą
+          </button>
+          <button onClick={handleDeleteQuestion} style={{ marginLeft: "1rem", color: "red" }}>
+             Ištrinti klausimą
+          </button>
+        </>
+      )}
+
       {question.topics?.length > 0 && (
-      <p><strong>Temos:</strong> {question.topics.join(", ")}</p>
-)}
-{question.tags?.length > 0 && (
-  <p><strong>Žymos:</strong> {question.tags.join(", ")}</p>
-)}
+        <p><strong>Temos:</strong> {question.topics.join(", ")}</p>
+      )}
+      {question.tags?.length > 0 && (
+        <p><strong>Žymos:</strong> {question.tags.join(", ")}</p>
+      )}
+
       <hr />
-      <h3>Atsakymai:</h3>
+            <h3>Atsakymai:</h3>
       <ul>
-  {answers.map((a) => {
-  return (
+  {answers.map((a) => (
     <li key={a._id}>
-      <p>{a.text}</p>
-      <small>
-  Autorius: {a.author && a.author.username ? a.author.username : "Nežinomas"}
-</small>
+      {editingAnswerId === a.id ? (
+        <form onSubmit={handleUpdateAnswer}>
+          <textarea
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            required
+          />
+          <button type="submit">Išsaugoti</button>
+          <button type="button" onClick={() => setEditingAnswerId(null)}>Atšaukti</button>
+        </form>
+      ) : (
+        <>
+          <p>
+            {a.text}
+            {a.edited && <span style={{ fontStyle: "italic", color: "#777" }}> (redaguota)</span>}
+          </p>
+          <small>
+            Autorius: {a.author?.username || "Nežinomas"}
+          </small>
+          {String(loggedInUserId) === String(a.user_id) && (
+            <>
+              <button onClick={() => startEditingAnswer(a.id, a.text)} style={{ marginLeft: "1rem" }}>
+                Redaguoti
+              </button>
+              <button
+                onClick={() => handleDeleteAnswer(a.id)}
+                style={{ marginLeft: "1rem", color: "red" }}
+              >
+                Trinti
+              </button>
+            </>
+          )}
+        </>
+      )}
     </li>
-  );
-})}
+  ))}
 </ul>
+
+
       {isAuthenticated ? (
-  <form onSubmit={handleAnswerSubmit}>
-    <textarea
-      value={newAnswer}
-      onChange={(e) => setNewAnswer(e.target.value)}
-      placeholder="Tavo atsakymas"
-      required
-    />
-    <button type="submit">Pateikti atsakymą</button>
-  </form>
-) : (
-  <p style={{ marginTop: "1rem", fontStyle: "italic" }}>
-    Prisijunkite, jei norite pateikti atsakymą.
-  </p>
-)}
+        <form onSubmit={handleAnswerSubmit}>
+          <textarea
+            value={newAnswer}
+            onChange={(e) => setNewAnswer(e.target.value)}
+            placeholder="Tavo atsakymas"
+            required
+          />
+          <button type="submit">Pateikti atsakymą</button>
+        </form>
+      ) : (
+        <p style={{ marginTop: "1rem", fontStyle: "italic" }}>
+          Prisijunkite, jei norite pateikti atsakymą.
+        </p>
+      )}
     </div>
   );
 };

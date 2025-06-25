@@ -14,8 +14,8 @@ const router = express.Router();
 router.get("/", getAllQuestions);
 router.get("/:id", getSingleQuestion);
 router.post("/", authenticate, createQuestion);
-router.patch("/:id", updateQuestion);
-router.delete("/:id", deleteQuestion);
+router.patch("/:id", authenticate, updateQuestion);
+router.delete("/questions/:id", authenticate, deleteQuestion);
 
 export default router;
 
