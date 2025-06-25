@@ -41,17 +41,17 @@ export const AuthProvider = ({ children }) => {
       if (!state.token) return;
       try {
         const res = await fetchWithToken("http://localhost:5500/me");
-        if (res.ok) {
-          const data = await res.json();
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              user: data.username,
-              id: data.id, 
-              token: state.token,
-            },
-          });
-        } else {
+if (res.ok) {
+  const data = await res.json();
+  dispatch({
+    type: "LOGIN",
+    payload: {
+      user: data.username,
+      token: state.token,
+      id: data.id 
+    }
+  });
+} else {
           dispatch({ type: "LOGOUT" });
         }
       } catch (err) {
