@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NavLink, useNavigate } from "react-router"; // tik iš react-router!
+import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
@@ -14,19 +14,27 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleAskQuestionClick = () => {
+    if (isAuthenticated) navigate("/questions/new");
+    else navigate("/login");
+  };
+
   return (
     <nav style={{ display: "flex", gap: "10px", padding: "10px", borderBottom: "1px solid #ccc" }}>
       <NavLink to="/">Home</NavLink>
+      <NavLink to="/questions">Klausimai</NavLink>
+
+      <button onClick={handleAskQuestionClick}>+ Naujas klausimas</button>
 
       {isAuthenticated ? (
         <>
-          <span>Welcome, {user}</span>
-          <button onClick={handleLogout}>Logout</button>
+          <span>Sveikas, {user}</span>
+          <button onClick={handleLogout}>Atsijungti</button>
         </>
       ) : (
         <>
-          <NavLink to="/login">Login</NavLink>
-          <NavLink to="/register">Register</NavLink>
+          <NavLink to="/login">Prisijungti</NavLink>
+          <NavLink to="/register">Registruotis</NavLink>
         </>
       )}
     </nav>
