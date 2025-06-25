@@ -20,7 +20,7 @@ app.use(authRoutes);
 app.use("/questions", questionRoutes);
 app.use(userRoutes);
 app.use(answersroutes);
-app.use("/", likesRoutes);
+app.use("/likes", likesRoutes);
 app.use("/filtered-questions", questionsFilterRoutes);
 
 app.get("/", (req, res) => res.send("Sveiki atvykę!"));

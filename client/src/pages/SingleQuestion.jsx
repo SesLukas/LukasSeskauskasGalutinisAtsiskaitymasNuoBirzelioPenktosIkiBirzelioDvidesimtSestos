@@ -93,7 +93,27 @@ const SingleQuestion = () => {
       alert("Nepavyko ištrinti atsakymo.");
     }
   };
-console.log("question:", question);
+ const handleLike = async () => {
+    const res = await fetchWithToken(`http://localhost:5500/questions/${question.id}/like`, {
+      method: "POST"
+    });
+    if (res.ok) {
+      const updated = await fetchWithToken(`http://localhost:5500/questions/${question.id}`);
+      const data = await updated.json();
+      setQuestion(data);
+    }
+  };
+
+  const handleDislike = async () => {
+    const res = await fetchWithToken(`http://localhost:5500/questions/${question.id}/dislike`, {
+      method: "POST"
+    });
+    if (res.ok) {
+      const updated = await fetchWithToken(`http://localhost:5500/questions/${question.id}`);
+      const data = await updated.json();
+      setQuestion(data);
+    }
+  };
   if (!question) return <p>Kraunama...</p>;
 
   return (
@@ -123,7 +143,16 @@ console.log("question:", question);
       {question.tags?.length > 0 && (
         <p><strong>Žymos:</strong> {question.tags.join(", ")}</p>
       )}
-
+{isAuthenticated && (
+        <div style={{ marginTop: "1rem" }}>
+          <button onClick={handleLike}>
+            👍 Like ({question.likes?.length || 0})
+          </button>
+          <button onClick={handleDislike} style={{ marginLeft: "1rem" }}>
+            👎 Dislike ({question.dislikes?.length || 0})
+          </button>
+        </div>
+      )}
       <hr />
             <h3>Atsakymai:</h3>
       <ul>
