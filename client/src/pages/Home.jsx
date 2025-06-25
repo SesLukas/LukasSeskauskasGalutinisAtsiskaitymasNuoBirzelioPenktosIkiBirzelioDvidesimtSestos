@@ -4,9 +4,8 @@ import { fetchWithToken } from "../utils/fetchtwithoken.js";
 
 const Home = () => {
   const { user, isAuthenticated, dispatch } = useContext(AuthContext);
-  const [questions, setQuestions] = useState([]);
+  const [questionsWithAnswers, setQuestionsWithAnswers] = useState([]);
 
-  
   useEffect(() => {
     const checkUser = async () => {
       if (!user && localStorage.getItem("token")) {
@@ -27,18 +26,28 @@ const Home = () => {
     checkUser();
   }, [user, dispatch]);
 
-  // Gauna klausimus
+  // Gauna klausimus su jų atsakymais
   useEffect(() => {
-    const fetchQuestions = async () => {
+    const fetchData = async () => {
       try {
         const res = await fetch("http://localhost:5500/questions");
-        const data = await res.json();
-        setQuestions(data);
+        const questions = await res.json();
+
+        const questionsWithAnswers = await Promise.all(
+          questions.map(async (q) => {
+            const ansRes = await fetch(`http://localhost:5500/questions/${q._id}/answers`);
+            const answers = await ansRes.json();
+            return { ...q, answers };
+          })
+        );
+
+        setQuestionsWithAnswers(questionsWithAnswers);
       } catch (err) {
-        console.error("Nepavyko gauti klausimų:", err.message);
+        console.error("Nepavyko gauti klausimų su atsakymais:", err.message);
       }
     };
-    fetchQuestions();
+
+    fetchData();
   }, []);
 
   return (
@@ -50,10 +59,27 @@ const Home = () => {
         <p>Prašome prisijungti, kad galėtumėte naudotis visomis funkcijomis.</p>
       )}
 
-      <h2>Klausimai:</h2>
+      <h2>Klausimai su atsakymais:</h2>
       <ul>
-        {questions.map(q => (
-          <li key={q._id}>{q.title}</li>
+        {questionsWithAnswers.map(q => (
+          <li key={q._id}>
+            <strong>{q.title}</strong>
+            <br />
+            <small>
+              {q.author?.username ? `Autorius: ${q.author.username}` : ""}
+            </small>
+            <ul>
+              {q.answers.length > 0 ? (
+                q.answers.map(ans => (
+                  <li key={ans._id}>
+                    {ans.text} – <small>{ans.author?.username || "Nežinomas"}</small>
+                  </li>
+                ))
+              ) : (
+                <li>Nėra atsakymų</li>
+              )}
+            </ul>
+          </li>
         ))}
       </ul>
     </div>

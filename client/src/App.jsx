@@ -21,7 +21,7 @@ function App() {
         <Route path="/questions/new" element={<QuestionForm />} />
         <Route path="/questions/:id" element={<SingleQuestion />}
          />
-         <Route path="/questions/:id" element={<QuestionDetails />}/>
+         <Route path="/questions/:id/details" element={<QuestionDetails />} />
       </Routes>
     </BrowserRouter>
   );
