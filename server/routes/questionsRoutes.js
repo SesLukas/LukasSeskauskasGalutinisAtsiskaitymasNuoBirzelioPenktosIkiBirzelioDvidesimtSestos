@@ -1,3 +1,4 @@
+
 import express from "express";
 import {
   getAllQuestions,
@@ -9,10 +10,12 @@ import {
 
 const router = express.Router();
 
-router.get("/questions", getAllQuestions);
-router.get("/questions/:id", getSingleQuestion);
-router.post("/questions", createQuestion);
-router.patch("/questions/:id", updateQuestion);
-router.delete("/questions/:id", deleteQuestion);
+
+router.get("/", getAllQuestions);
+router.get("/:id", getSingleQuestion);
+router.post("/", createQuestion);
+router.patch("/:id", updateQuestion);
+router.delete("/:id", deleteQuestion);
 
 export default router;
+
