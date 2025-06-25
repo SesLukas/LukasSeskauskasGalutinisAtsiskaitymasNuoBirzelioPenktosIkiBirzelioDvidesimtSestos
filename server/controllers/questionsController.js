@@ -4,13 +4,45 @@ import { getDb } from "../config/db.js";
 export const getAllQuestions = async (req, res) => {
   try {
     const db = getDb();
-    const questionsCollection = db.collection("questions");
-    const questions = await questionsCollection.find().toArray();
+    const questionsCollection = db.collection("questions"); // <- šito trūko!
+
+    const questions = await questionsCollection.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id", // tavo laukelis, pvz. 5
+          foreignField: "_id",    // users kolekcijoje irgi "id", ne "_id"
+          as: "author"
+        }
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          tags: 1,
+          createdAt: 1,
+          answerCount: 1,
+          "author.username": 1
+        }
+      }
+    ]).toArray();
+
     res.status(200).json(questions);
   } catch (err) {
-    res.status(500).json({ message: "Klaida gaunant klausimus", error: err.message });
+    res.status(500).json({
+      message: "Klaida gaunant klausimus su autoriais",
+      error: err.message
+    });
   }
 };
+
+
 
 export const createQuestion = async (req, res) => {
   try {
@@ -63,12 +95,61 @@ export const getSingleQuestion = async (req, res) => {
   try {
     const db = getDb();
     const questionsCollection = db.collection("questions");
+    const answersCollection = db.collection("answers");
+    const usersCollection = db.collection("users");
+
     const { id } = req.params;
-    const question = await questionsCollection.findOne({ _id: id });
-    if (!question) {
+
+    // Klausimas su autoriumi
+    const question = await questionsCollection.aggregate([
+      {
+        $match: { _id: id }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "id",
+          as: "author"
+        }
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true
+        }
+      }
+    ]).toArray();
+
+    if (!question[0]) {
       return res.status(404).json({ message: "Klausimas nerastas" });
     }
-    res.status(200).json(question);
+
+    // Atsakymai su jų autoriais
+    const answers = await answersCollection.aggregate([
+      {
+        $match: { question_id: id }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "id",
+          as: "author"
+        }
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true
+        }
+      }
+    ]).toArray();
+
+    res.status(200).json({
+      ...question[0],
+      answers
+    });
   } catch (err) {
     res.status(500).json({ message: "Klaida gaunant klausimą", error: err.message });
   }

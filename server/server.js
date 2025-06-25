@@ -21,7 +21,7 @@ app.use("/questions", questionRoutes);
 app.use(userRoutes);
 app.use(answersroutes);
 app.use("/", likesRoutes);
-app.use("/questions/filter", questionsFilterRoutes);
+app.use("/filtered-questions", questionsFilterRoutes);
 
 app.get("/", (req, res) => res.send("Sveiki atvykę!"));
 
