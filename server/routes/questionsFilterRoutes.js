@@ -1,9 +1,8 @@
 import express from "express";
-import { getAllQuestions } from "../controllers/questionsFilterController.js";
+import { filterQuestions } from "../controllers/questionsFilterController.js";
 
 const router = express.Router();
 
-
-router.get("/", getAllQuestions);
+router.get("/", filterQuestions); 
 
 export default router;

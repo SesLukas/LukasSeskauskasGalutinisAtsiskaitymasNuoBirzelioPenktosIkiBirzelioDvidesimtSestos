@@ -1,6 +1,6 @@
 import { getDb } from "../config/db.js";
 
-export const getAllQuestions = async (req, res) => {
+export const filterQuestions = async (req, res) => {
   try {
     const db = getDb();
     const questionsCollection = db.collection("questions");
@@ -17,40 +17,40 @@ export const getAllQuestions = async (req, res) => {
 
     const query = {};
 
-    // 🔍 Filtravimas pagal atsakymus
+    //  Filtravimas pagal atsakymus
     if (filter === "answered") {
       query.answerCount = { $gt: 0 };
     } else if (filter === "unanswered") {
       query.answerCount = { $eq: 0 };
     }
 
-    // 🔍 Filtravimas pagal tag'ą
+    //  Filtravimas pagal tag'ą
     if (tag) {
       query.tags = { $in: [tag] };
     }
 
-    // 🔍 Filtravimas pagal temą (topic)
+    // Filtravimas pagal temą (topic)
     if (topic) {
       query.topic = topic;
     }
 
-    // 🔍 Paieška pagal pavadinimą
+    //  Paieška pagal pavadinimą
     if (search) {
       query.title = { $regex: search, $options: "i" };
     }
 
-    // 🔃 Rikiavimas
+    //  Rikiavimas
     const sortOptions = {};
     if (sort === "date_asc") sortOptions.createdAt = 1;
     else if (sort === "date_desc") sortOptions.createdAt = -1;
     else if (sort === "answers_asc") sortOptions.answerCount = 1;
     else if (sort === "answers_desc") sortOptions.answerCount = -1;
 
-    // 📄 Puslapiavimas
+    //  Puslapiavimas
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const lim = parseInt(limit);
 
-    // 🔎 Užklausa
+    //  Užklausa
     const questions = await questionsCollection
       .find(query)
       .sort(sortOptions)

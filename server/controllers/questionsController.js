@@ -1,5 +1,6 @@
 import { getDb } from "../config/db.js";
 
+
 export const getAllQuestions = async (req, res) => {
   try {
     const db = getDb();
