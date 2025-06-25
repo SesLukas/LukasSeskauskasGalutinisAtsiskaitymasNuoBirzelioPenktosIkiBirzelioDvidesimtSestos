@@ -38,14 +38,23 @@ const SingleQuestion = () => {
   return (
     <div>
       <h2>{question.title}</h2>
-      <p>{question.content}</p>
+      <p>{question.description}</p>
+      {question.topics?.length > 0 && (
+      <p><strong>Temos:</strong> {question.topics.join(", ")}</p>
+)}
+{question.tags?.length > 0 && (
+  <p><strong>Žymos:</strong> {question.tags.join(", ")}</p>
+)}
       <hr />
       <h3>Atsakymai:</h3>
       <ul>
-        {answers.map((a) => (
-          <li key={a._id}>{a.content}</li>
-        ))}
-      </ul>
+  {answers.map((a) => (
+    <li key={a._id}>
+      <p>{a.text}</p>
+      <small>Autorius: {a.author?.username || "Nežinomas"}</small>
+    </li>
+  ))}
+</ul>
       <form onSubmit={handleAnswerSubmit}>
         <textarea
           value={newAnswer}

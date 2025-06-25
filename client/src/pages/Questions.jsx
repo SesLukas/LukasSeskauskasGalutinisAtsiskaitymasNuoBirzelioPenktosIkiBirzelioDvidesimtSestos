@@ -20,8 +20,10 @@ const Questions = () => {
       <ul>
         {questions.map((q) => (
           <li key={q._id}>
-            <Link to={`/questions/${q._id}`}>{q.title}</Link>
-          </li>
+  <Link to={`/questions/${q._id}`}>{q.title}</Link>
+  <br />
+  <small>{q.author?.username ? `Autorius: ${q.author.username}` : ""}</small>
+</li>
         ))}
       </ul>
       <Link to="/questions/new">

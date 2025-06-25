@@ -61,27 +61,28 @@ const Home = () => {
 
       <h2>Klausimai su atsakymais:</h2>
       <ul>
-        {questionsWithAnswers.map(q => (
-          <li key={q._id}>
-            <strong>{q.title}</strong>
-            <br />
-            <small>
-              {q.author?.username ? `Autorius: ${q.author.username}` : ""}
-            </small>
-            <ul>
-              {q.answers.length > 0 ? (
-                q.answers.map(ans => (
-                  <li key={ans._id}>
-                    {ans.text} – <small>{ans.author?.username || "Nežinomas"}</small>
-                  </li>
-                ))
-              ) : (
-                <li>Nėra atsakymų</li>
-              )}
-            </ul>
-          </li>
-        ))}
+  {questionsWithAnswers.map(q => (
+    <li key={`question-${q._id || q.id}`}>
+
+      <strong>{q.title}</strong>
+      <br />
+      <small>
+        {q.author?.username ? `Autorius: ${q.author.username}` : ""}
+      </small>
+      <ul>
+        {q.answers.length > 0 ? (
+          q.answers.map((ans, i) => (
+            <li key={`answer-${ans._id || i}`}>
+              {ans.text} – <small>{ans.author?.username || "Nežinomas"}</small>
+            </li>
+          ))
+        ) : (
+          <li>Nėra atsakymų</li>
+        )}
       </ul>
+    </li>
+  ))}
+</ul>
     </div>
   );
 };
