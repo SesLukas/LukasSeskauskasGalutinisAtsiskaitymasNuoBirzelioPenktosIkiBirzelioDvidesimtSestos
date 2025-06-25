@@ -1,11 +1,42 @@
 import { getDb } from "../config/db.js";
 
+
 export const getAnswersByQuestionId = async (req, res) => {
   try {
     const db = getDb();
-    const answersCollection = db.collection("answers");
     const { id } = req.params;
-    const answers = await answersCollection.find({ question_id: id }).toArray();
+
+    const answers = await db.collection("answers").aggregate([
+      {
+        $match: { question_id: id }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id", // 👈 svarbu: ne "_id", o "id", jei naudojate string ID
+          as: "author"
+        }
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      
+  {
+  $project: {
+    _id: 1,
+    text: 1,
+    createdAt: 1,
+    user_id: 1,
+    "author.username": 1
+  }
+}
+    ]).toArray();
+    console.log("Gauti atsakymai:", JSON.stringify(answers, null, 2));
+
     res.status(200).json(answers);
   } catch (err) {
     res.status(500).json({ message: "Klaida gaunant atsakymus", error: err.message });
@@ -61,4 +92,6 @@ export const deleteAnswer = async (req, res) => {
     res.status(500).json({ message: "Klaida trinant atsakymą", error: err.message });
   }
 };
+
+
 
