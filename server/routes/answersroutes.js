@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticate } from "../middleware/authMiddleware.js";
 import {
   getAnswersByQuestionId,
   createAnswer,
@@ -9,7 +10,7 @@ import {
 const router = express.Router();
 
 router.get("/questions/:id/answers", getAnswersByQuestionId);
-router.post("/questions/:id/answers", createAnswer);
+router.post("/questions/:id/answers", authenticate, createAnswer);
 router.patch("/answers/:id", updateAnswer);
 router.delete("/answers/:id", deleteAnswer);
 
