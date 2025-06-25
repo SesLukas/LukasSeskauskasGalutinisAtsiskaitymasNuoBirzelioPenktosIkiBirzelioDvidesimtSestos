@@ -73,8 +73,10 @@ const Home = () => {
         {q.answers.length > 0 ? (
           q.answers.map((ans, i) => (
             <li key={`answer-${ans._id || i}`}>
-              {ans.text} – <small>{ans.author?.username || "Nežinomas"}</small>
-            </li>
+  {ans.text}
+  {ans.edited && <span style={{ fontStyle: "italic", color: "#777" }}> (redaguota)</span>}
+  – <small>{ans.author?.username || "Nežinomas"}</small>
+</li>
           ))
         ) : (
           <li>Nėra atsakymų</li>

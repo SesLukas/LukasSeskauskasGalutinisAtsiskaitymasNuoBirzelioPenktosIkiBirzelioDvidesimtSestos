@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/questions/:id/answers", getAnswersByQuestionId);
 router.post("/questions/:id/answers", authenticate, createAnswer);
-router.patch("/answers/:id", updateAnswer);
-router.delete("/answers/:id", deleteAnswer);
+router.patch("/answers/:id", authenticate, updateAnswer);
+router.delete("/answers/:id", authenticate, deleteAnswer)
 
 export default router;
