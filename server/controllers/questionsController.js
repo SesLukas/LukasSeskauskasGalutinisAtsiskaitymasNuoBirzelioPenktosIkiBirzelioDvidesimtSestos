@@ -4,14 +4,12 @@ import { getDb } from "../config/db.js";
 export const getAllQuestions = async (req, res) => {
   try {
     const db = getDb();
-    const questionsCollection = db.collection("questions"); // <- šito trūko!
-
-    const questions = await questionsCollection.aggregate([
+    const questions = await db.collection("questions").aggregate([
       {
         $lookup: {
           from: "users",
-          localField: "user_id", // tavo laukelis, pvz. 5
-          foreignField: "_id",    // users kolekcijoje irgi "id", ne "_id"
+          localField: "user_id",
+          foreignField: "_id",
           as: "author"
         }
       },
@@ -20,28 +18,15 @@ export const getAllQuestions = async (req, res) => {
           path: "$author",
           preserveNullAndEmptyArrays: true
         }
-      },
-      {
-        $project: {
-          title: 1,
-          content: 1,
-          tags: 1,
-          createdAt: 1,
-          answerCount: 1,
-          "author.username": 1
-        }
       }
     ]).toArray();
 
     res.status(200).json(questions);
   } catch (err) {
-    res.status(500).json({
-      message: "Klaida gaunant klausimus su autoriais",
-      error: err.message
-    });
+    console.error("Klaida gaunant klausimus:", err);
+    res.status(500).json({ message: "Klaida serveryje" });
   }
 };
-
 
 
 export const createQuestion = async (req, res) => {
@@ -100,7 +85,7 @@ export const getSingleQuestion = async (req, res) => {
 
     const { id } = req.params;
 
-    // Klausimas su autoriumi
+    
     const question = await questionsCollection.aggregate([
       {
         $match: { _id: id }
@@ -125,7 +110,7 @@ export const getSingleQuestion = async (req, res) => {
       return res.status(404).json({ message: "Klausimas nerastas" });
     }
 
-    // Atsakymai su jų autoriais
+    
     const answers = await answersCollection.aggregate([
       {
         $match: { question_id: id }
