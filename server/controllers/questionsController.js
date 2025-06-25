@@ -54,14 +54,14 @@ export const createQuestion = async (req, res) => {
     const { title, description, topics = [], tags = [] } = req.body;
 
     const newQuestion = {
-      id: uuidv4(),
-      title,
-      description,
-      topics,
-      tags,
-      authorId: req.user.id,
-      createdAt: new Date(),
-    };
+  id: uuidv4(),
+  title,
+  description,
+  topics,
+  tags,
+  user_id: req.user.id,  
+  createdAt: new Date(),
+};
 
     await db.collection("questions").insertOne(newQuestion);
 
