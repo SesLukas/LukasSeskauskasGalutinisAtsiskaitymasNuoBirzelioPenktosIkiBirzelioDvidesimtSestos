@@ -67,7 +67,8 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.status(200).json({ token, username: user.username });
+    res.status(200).json({ token, username: user.username,
+  id: user._id });
   } catch (err) {
     res.status(500).json({ message: "Prisijungimo klaida", error: err.message });
   }
