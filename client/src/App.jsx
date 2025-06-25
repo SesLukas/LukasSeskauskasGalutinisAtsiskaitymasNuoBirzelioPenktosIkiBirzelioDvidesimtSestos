@@ -7,6 +7,7 @@ import Questions from "./pages/Questions";
 import QuestionForm from "./pages/QuestionForm";
 import SingleQuestion from "./pages/SingleQuestion";
 import QuestionDetails from "./pages/QuestionDetails";
+import QuestionEditForm from "./pages/QuestionEditForm.jsx";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/questions/:id" element={<SingleQuestion />}
          />
          <Route path="/questions/:id/details" element={<QuestionDetails />} />
+         <Route path="/questions/:id/edit" element={<QuestionEditForm />} />
       </Routes>
     </BrowserRouter>
   );
