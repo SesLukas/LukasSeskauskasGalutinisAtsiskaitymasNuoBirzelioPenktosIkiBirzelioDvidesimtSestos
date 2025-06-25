@@ -1,4 +1,4 @@
-# LukasSeskauskasGalutinisAtsiskaitymasNuoBirzelioPenktosIkiBirzelioDvidesimtSestos
+# LukasSeskauskasGalutinisAtsiskaitymasNuoBirzelioPenktosIkiBirzelioDvidesimtŠeštos
 Galutinio atsiskaitymo atlikimas nuo birželio 5 d. iki birželio 26 d.
 Projektas: Lukas Šeškauskas – Galutinis Atsiskaitymas
 Šis projektas sukurtas kaip atsiskaitymas birželio 5–26 dienoms. Naudojamos technologijos:
