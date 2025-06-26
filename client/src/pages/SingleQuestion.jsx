@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import { useEffect, useState, useContext } from "react";
 import { fetchWithToken } from "../utils/fetchtwithoken.js";
 import { AuthContext } from "../context/AuthContext.jsx";
+import "./SingleQuestion.css";
 
 const SingleQuestion = () => {
   const { id } = useParams();
@@ -93,33 +94,13 @@ const SingleQuestion = () => {
       alert("Nepavyko ištrinti atsakymo.");
     }
   };
- const handleLike = async () => {
-    const res = await fetchWithToken(`http://localhost:5500/questions/${question.id}/like`, {
-      method: "POST"
-    });
-    if (res.ok) {
-      const updated = await fetchWithToken(`http://localhost:5500/questions/${question.id}`);
-      const data = await updated.json();
-      setQuestion(data);
-    }
-  };
 
-  const handleDislike = async () => {
-    const res = await fetchWithToken(`http://localhost:5500/questions/${question.id}/dislike`, {
-      method: "POST"
-    });
-    if (res.ok) {
-      const updated = await fetchWithToken(`http://localhost:5500/questions/${question.id}`);
-      const data = await updated.json();
-      setQuestion(data);
-    }
-  };
   if (!question) return <p>Kraunama...</p>;
 
   return (
-    <div>
-      <h2>{question.title}</h2>
-      <p>
+    <div className="question-container">
+      <h2 className="question-title">{question.title}</h2>
+      <p className="question-description">
         {question.description}
         {question.edited && (
           <span style={{ fontStyle: "italic", color: "#777" }}> (redaguota)</span>
@@ -142,16 +123,6 @@ const SingleQuestion = () => {
       )}
       {question.tags?.length > 0 && (
         <p><strong>Žymos:</strong> {question.tags.join(", ")}</p>
-      )}
-{isAuthenticated && (
-        <div style={{ marginTop: "1rem" }}>
-          <button onClick={handleLike}>
-            👍 Like ({question.likes?.length || 0})
-          </button>
-          <button onClick={handleDislike} style={{ marginLeft: "1rem" }}>
-            👎 Dislike ({question.dislikes?.length || 0})
-          </button>
-        </div>
       )}
       <hr />
             <h3>Atsakymai:</h3>
@@ -189,12 +160,8 @@ const SingleQuestion = () => {
                 Trinti
               </button>
             </>
-          )}
-        </>
-      )}
-    </li>
-  ))}
-</ul>
+          )}</>
+      )}</li> ))}</ul>
 
 
       {isAuthenticated ? (

@@ -8,6 +8,7 @@ import QuestionForm from "./pages/QuestionForm";
 import SingleQuestion from "./pages/SingleQuestion";
 import QuestionDetails from "./pages/QuestionDetails";
 import QuestionEditForm from "./pages/QuestionEditForm.jsx";
+import './App.css';
 
 
 function App() {

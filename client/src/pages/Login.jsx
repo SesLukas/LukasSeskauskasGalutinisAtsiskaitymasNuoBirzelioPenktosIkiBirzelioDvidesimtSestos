@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router";
+import './Login.css';
 
 const Login = () => {
   const { dispatch } = useContext(AuthContext);
@@ -33,8 +34,8 @@ const Login = () => {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
+  return (<div className="login-container">
+    <form onSubmit={handleSubmit} className="login-form">
       <input
         type="text"
         value={form.username}
@@ -50,6 +51,7 @@ const Login = () => {
       />
       <button type="submit">Login</button>
     </form>
+    </div>
   );
 };
 
