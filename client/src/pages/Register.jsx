@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
+import './Register.css';
 
 const Register = () => {
   const { dispatch } = useContext(AuthContext);
@@ -31,7 +32,8 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="register-container">
+    <form onSubmit={handleSubmit} className="register-form">
       <input placeholder="Name" onChange={(e) => setForm({ ...form, name: e.target.value })} />
       <input placeholder="Surname" onChange={(e) => setForm({ ...form, surname: e.target.value })} />
       <input placeholder="Email" type="email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
@@ -39,6 +41,7 @@ const Register = () => {
       <input placeholder="Password" type="password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
       <button type="submit">Register</button>
     </form>
+    </div>
   );
 };
 

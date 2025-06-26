@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchWithToken } from "../utils/fetchtwithoken.js";
 import { Link } from "react-router";
+import "./Questions.css";
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
@@ -15,18 +16,18 @@ const Questions = () => {
   }, []);
 
   return (
-    <div>
+    <div className="questions-container">
       <h2>Klausimai</h2>
-      <ul>
+      <ul className="questions-list">
         {questions.map((q) => (
           <li key={q._id}>
-  <Link to={`/questions/${q._id}`}>{q.title}</Link>
+  <Link to={`/questions/${q._id}`} className="question-link">{q.title}</Link>
   <br />
-  <small>{q.author?.username ? `Autorius: ${q.author.username}` : ""}</small>
+  <p className="question-meta">{q.author?.username ? `Autorius: ${q.author.username}` : ""}</p>
 </li>
         ))}
       </ul>
-      <Link to="/questions/new">
+      <Link to="/questions/new" className="ask-button">
         <button>Užduoti naują klausimą</button>
       </Link>
     </div>

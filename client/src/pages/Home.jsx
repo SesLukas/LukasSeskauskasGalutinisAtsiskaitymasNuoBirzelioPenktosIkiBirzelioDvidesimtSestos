@@ -6,7 +6,7 @@ const Home = () => {
   const { user, isAuthenticated, dispatch } = useContext(AuthContext);
   const [questionsWithAnswers, setQuestionsWithAnswers] = useState([]);
 
-  // 👇 like/dislike mygtukai atnaujina šį sąrašą
+  
   const refreshQuestions = async () => {
     try {
       const res = await fetch("http://localhost:5500/questions");
@@ -24,20 +24,6 @@ const Home = () => {
     } catch (err) {
       console.error("Nepavyko gauti klausimų:", err.message);
     }
-  };
-
-  const handleLike = async (id) => {
-    const res = await fetchWithToken(`http://localhost:5500/questions/${id}/like`, {
-      method: "POST",
-    });
-    if (res.ok) refreshQuestions();
-  };
-
-  const handleDislike = async (id) => {
-    const res = await fetchWithToken(`http://localhost:5500/questions/${id}/dislike`, {
-      method: "POST",
-    });
-    if (res.ok) refreshQuestions();
   };
 
   useEffect(() => {
@@ -65,7 +51,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h1>Pradinis puslapis</h1>
       {isAuthenticated ? (
         <p>Sveiki sugrįžę, {user}!</p>
@@ -76,26 +62,10 @@ const Home = () => {
       <h2>Klausimai su atsakymais:</h2>
       <ul>
         {questionsWithAnswers.map((q) => (
-          <li key={`question-${q._id || q.id}`}>
+          <li key={`question-${q._id || q.id}`} className="card">
             <strong>{q.title}</strong>
             <br />
             <small>{q.author?.username ? `Autorius: ${q.author.username}` : ""}</small>
-
-            {/* 👍👎 Like / Dislike + Score */}
-            {isAuthenticated && (
-              <div style={{ marginTop: "0.5rem" }}>
-                <button onClick={() => handleLike(q.id || q._id)}>👍</button>
-                <button
-                  onClick={() => handleDislike(q.id || q._id)}
-                  style={{ marginLeft: "0.5rem" }}
-                >
-                  👎
-                </button>
-                <span style={{ marginLeft: "0.5rem" }}>
-                  Score: {(q.likes?.length || 0) - (q.dislikes?.length || 0)}
-                </span>
-              </div>
-            )}
 
             <ul>
               {q.answers.length > 0 ? (

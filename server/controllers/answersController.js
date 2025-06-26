@@ -12,8 +12,7 @@ export const getAnswersByQuestionId = async (req, res) => {
         $lookup: {
           from: "users",
           localField: "user_id",
-          foreignField: "_id", // jei user_id = _id
-          as: "author"
+          foreignField: "_id", 
         }
       },
       { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
