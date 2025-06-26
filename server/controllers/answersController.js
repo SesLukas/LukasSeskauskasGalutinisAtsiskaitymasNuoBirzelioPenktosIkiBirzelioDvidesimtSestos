@@ -13,6 +13,7 @@ export const getAnswersByQuestionId = async (req, res) => {
           from: "users",
           localField: "user_id",
           foreignField: "_id", 
+          as:"author"
         }
       },
       { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
